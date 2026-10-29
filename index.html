@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#1F6F66">
+<title>AMURA · Comunidad de propietarios</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;800&display=swap" rel="stylesheet">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<section id="login" hidden>
+  <form id="form-login">
+    <h1>AMURA</h1>
+    <p>Comunidad de propietarios</p>
+    <label>ID de tu vivienda
+      <input id="uid" placeholder="p1p1a" autocapitalize="none" autocomplete="username" required>
+    </label>
+    <label>Contraseña
+      <input id="pwd" type="password" autocomplete="current-password" required>
+    </label>
+    <p id="err" class="error"></p>
+    <button class="pri bloque">Entrar</button>
+    <button type="button" class="sec bloque" id="btn-manual">Manual de usuario</button>
+    <small>Tu ID y tu contraseña te los da la administración.</small>
+  </form>
+</section>
+
+<section id="app" hidden>
+  <header>
+    <div class="id"><strong>AMURA</strong><span id="quien"></span></div>
+    <div class="acc">
+      <button class="sec" id="btn-letra" aria-label="Cambiar el tamaño de la letra">A+</button>
+      <button class="sec" id="btn-ayuda">Ayuda</button>
+      <button class="sec" id="btn-salir">Salir</button>
+    </div>
+  </header>
+  <main id="main"></main>
+  <nav>
+    <button data-tab="incidencias"><span aria-hidden="true">🛠️</span>Incidencias</button>
+    <button data-tab="reuniones"><span aria-hidden="true">📅</span>Reuniones</button>
+    <button data-tab="actas"><span aria-hidden="true">📄</span>Actas</button>
+    <button data-tab="cuentas"><span aria-hidden="true">💶</span>Cuentas</button>
+  </nav>
+</section>
+
+<div id="toast" hidden></div>
+
+<dialog id="dlg">
+  <h2 id="dlg-t"></h2>
+  <form id="dlg-f"></form>
+</dialog>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.58.0/dist/umd/supabase.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
