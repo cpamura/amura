@@ -1,7 +1,7 @@
 // ====== CONFIGURA ESTO ======
 const SUPABASE_URL = 'https://akgzqoqublqfymjgnqvl.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_7DF3u_omK7IITfmM3Eyl5g_H84FAgHr'; // la clave "anon public", nunca la service_role
-const VAPID_PUBLIC = 'PEGA_AQUI_TU_CLAVE_PUBLICA_VAPID'; // para los avisos en el móvil (ver LEEME.md)
+const VAPID_PUBLIC = 'BBptLStng-OsOMdjkBjMTNBs07-03wXVP5HMXQRsTX3ZRGDSHChAmNw_8axgmhNoFPMiuW3XA8eOeUrly4yqpnc'; // para los avisos en el móvil (ver LEEME.md)
 const DOMINIO = 'amura.com'; // interno: el vecino solo escribe su ID
 // ============================
 
