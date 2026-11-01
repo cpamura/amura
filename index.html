@@ -12,33 +12,15 @@
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+<clipPath id="lt"><rect width="64" height="64" rx="15"/></clipPath>
+<g id="bl"><rect width="15" height="27" rx="1.5" fill="#fff"/><rect x="12" width="3" height="27" fill="#E3E7EB"/><path fill="#7FB6D9" d="M3 3h4v4H3zM8 3h4v4H8zM3 12h4v4H3zM8 12h4v4H8zM3 21h4v4H3zM8 21h4v4H8z"/><rect x="-1" y="-2" width="17" height="3" rx="1.5" fill="#CBD2D9"/></g>
+<symbol id="logo" viewBox="0 0 64 64"><g clip-path="url(#lt)"><rect width="64" height="64" fill="#BFE6F5"/><circle cx="53" cy="13" r="5" fill="#FFC94D"/><rect y="46" width="64" height="18" fill="#8ED08B"/><use href="#bl" x="6" y="19"/><use href="#bl" x="24.5" y="19"/><use href="#bl" x="43" y="19"/></g></symbol>
+</defs></svg>
 
 <section id="login" hidden>
   <form id="form-login">
-    <svg class="hero" viewBox="0 0 400 190" role="img" aria-label="Residencial con piscina y zonas verdes" xmlns="http://www.w3.org/2000/svg">
-<defs>
-<linearGradient id="cielo" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7CC8F2"/><stop offset="1" stop-color="#EAF7FF"/></linearGradient>
-<linearGradient id="agua" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#27B7D1"/><stop offset="1" stop-color="#86E6EC"/></linearGradient>
-<pattern id="vent" width="32" height="20" patternUnits="userSpaceOnUse"><rect x="4" y="3" width="24" height="12" rx="1.5" fill="#7FB6D9"/><rect y="15" width="32" height="2" fill="#fff" opacity=".6"/><rect y="17" width="32" height="3" fill="#CFC6B5"/></pattern>
-<pattern id="mad" width="5" height="10" patternUnits="userSpaceOnUse"><rect width="5" height="10" fill="#C58B5A"/><rect width="2" height="10" fill="#B27646"/></pattern>
-</defs>
-<rect width="400" height="190" fill="url(#cielo)"/>
-<circle cx="338" cy="38" r="30" fill="#FFE29A" opacity=".5"/><circle cx="338" cy="38" r="19" fill="#FFC94D"/>
-<path d="M0 118 Q70 86 140 112 T290 104 T400 114 V150 H0Z" fill="#BFE3D3"/>
-<rect x="30" y="80" width="84" height="62" fill="#FBF7F0"/><rect x="30" y="80" width="84" height="60" fill="url(#vent)"/><rect x="28" y="77" width="88" height="4" fill="#8B8478"/>
-<rect x="120" y="40" width="132" height="100" fill="#FBF7F0"/><rect x="120" y="40" width="132" height="100" fill="url(#vent)"/><rect x="120" y="40" width="22" height="100" fill="url(#mad)"/><rect x="238" y="40" width="14" height="100" fill="#000" opacity=".07"/><rect x="117" y="37" width="138" height="4" fill="#8B8478"/>
-<rect x="262" y="60" width="92" height="82" fill="#FBF7F0"/><rect x="262" y="60" width="92" height="80" fill="url(#vent)"/><rect x="332" y="60" width="22" height="80" fill="url(#mad)"/><rect x="259" y="57" width="98" height="4" fill="#8B8478"/>
-<rect y="140" width="400" height="50" fill="#8ED08B"/>
-<ellipse cx="60" cy="142" rx="26" ry="8" fill="#5DAE6B"/><ellipse cx="200" cy="141" rx="30" ry="7" fill="#5DAE6B"/><ellipse cx="330" cy="143" rx="28" ry="8" fill="#5DAE6B"/>
-<rect x="36" y="146" width="328" height="42" rx="12" fill="#F1E6D2"/>
-<rect x="52" y="152" width="206" height="28" rx="10" fill="url(#agua)" stroke="#fff" stroke-width="3"/>
-<path d="M70 162q10-5 20 0t20 0M150 170q10-5 20 0t20 0M110 175q8-4 16 0t16 0" stroke="#fff" stroke-width="2" fill="none" opacity=".6"/>
-<rect x="274" y="168" width="22" height="7" rx="3" fill="#fff"/><rect x="302" y="168" width="22" height="7" rx="3" fill="#fff"/>
-<line x1="298" y1="150" x2="298" y2="176" stroke="#8B6B4A" stroke-width="2"/><path d="M276 154Q298 136 320 154Z" fill="#FF7A59"/>
-<g stroke="#8B5E3C" stroke-width="5" stroke-linecap="round" fill="none"><path d="M18 148Q21 126 15 100"/><path d="M386 148Q383 128 389 104"/></g>
-<g stroke="#3F9B57" stroke-width="4" stroke-linecap="round" fill="none"><path d="M15 100q-14 2-22 12M15 100q12-8 24-2M15 100q-6-10-2-18M15 100q10 2 14 12"/><path d="M389 104q14 2 22 12M389 104q-12-8-24-2M389 104q6-10 2-18M389 104q-10 2-14 12"/></g>
-</svg>
-    <h1>AMURA</h1>
+    <h1><svg class="logo" aria-hidden="true"><use href="#logo"/></svg>AMURA</h1>
     <p>Comunidad de propietarios</p>
     <p class="lead">Introduce el ID de tu vivienda y la contraseña que has recibido para acceder.</p>
     <label>ID de tu vivienda
@@ -55,7 +37,7 @@
 
 <section id="app" hidden>
   <header>
-    <div class="id"><strong>AMURA</strong><span id="quien"></span></div>
+    <div class="id"><strong><svg class="logo" aria-hidden="true"><use href="#logo"/></svg>AMURA</strong><span id="quien"></span></div>
     <div class="acc">
       <button class="sec" id="btn-letra" aria-label="Cambiar el tamaño de la letra">A+</button>
       <button class="sec" id="btn-ayuda">Ayuda</button>

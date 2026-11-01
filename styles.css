@@ -94,7 +94,6 @@ dialog h2{font-size:1.4rem}
 .manual h4{margin:1rem 0 .2rem;color:var(--tinta);font-size:1rem}
 #toast{position:fixed;left:1rem;right:1rem;bottom:calc(5.2rem + env(safe-area-inset-bottom,0px));z-index:6;display:flex;justify-content:space-between;align-items:center;gap:.6rem;padding:.6rem .9rem;border-radius:18px;background:var(--tinta);color:var(--fondo);box-shadow:0 8px 24px rgba(0,0,0,.3)}
 #toast button{min-height:2.4rem;background:var(--sol);color:#2B1000;border-radius:14px}
-.hero{display:block;width:calc(100% + 3.4rem);max-width:none;margin:-1.7rem -1.7rem 1rem;border-radius:32px 32px 0 0}
 #form-login .lead{margin-top:.6rem;color:var(--tinta)}
 .manual img{display:block;width:100%;max-width:19rem;margin:.6rem auto;border-radius:18px;border:2px solid var(--linea)}
 .tiles.din strong{font-size:1.05rem;line-height:1.3}
@@ -102,3 +101,4 @@ dialog h2{font-size:1.4rem}
 .mini{display:flex;gap:.3rem;margin-top:.4rem;justify-content:flex-end}
 .mini button{min-height:2.2rem;padding:0 .7rem;font-size:.75rem}
 #ferr:empty{display:none}
+.logo{width:1.05em;height:1.05em;vertical-align:-.14em;margin-right:.25em;flex:none}
