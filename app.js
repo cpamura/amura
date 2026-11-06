@@ -130,9 +130,10 @@ function confirmar(texto, boton = 'Sí, eliminar') {
 let tt;
 function toast(texto, deshacer) {
   const t = $('#toast');
-  t.innerHTML = `<span>${esc(texto)}</span><button type="button" id="t-un">Deshacer</button>`;
+  t.innerHTML = `<span>${esc(texto)}</span>${deshacer ? '<button type="button" id="t-un">Deshacer</button>' : ''}<button type="button" class="toast-cerrar" id="t-cerrar" aria-label="Cerrar aviso" title="Cerrar">×</button>`;
   t.hidden = false;
-  $('#t-un').onclick = () => { t.hidden = true; clearTimeout(tt); deshacer(); };
+  $('#t-cerrar').onclick = () => { t.hidden = true; clearTimeout(tt); };
+  if (deshacer) $('#t-un').onclick = () => { t.hidden = true; clearTimeout(tt); deshacer(); };
   clearTimeout(tt); tt = setTimeout(() => { t.hidden = true; }, 8000);
 }
 function manual() {
@@ -259,18 +260,22 @@ async function render() {
 const titulo = t => `<div class="barra"><h2>${t}</h2></div>`;
 const borrar = t => `<button class="sec" data-act="del" data-t="${t}">Eliminar</button>`;
 
-const tarjetaInc = i => `<article class="card s-${i.estado}" data-id="${i.id}">
+const tarjetaInc = i => {
+  const propia = i.autor === me.id;
+  return `<article class="card s-${i.estado}" data-id="${i.id}">
   <div class="fila"><span class="b ${i.estado}">${ESTADOS[i.estado]}</span><span class="b">${i.tipo === 'reclamacion' ? 'Reclamación' : 'Incidencia'}</span></div>
   <h3>${esc(i.titulo)}</h3>
   <p class="meta">${esc(lugar(i.vivienda))}. Creada el ${fecha(i.created_at)}</p>
   ${i.actualizada_at ? `<p class="meta act">🔄 Actualizada el ${fecha(i.actualizada_at)}</p>` : ''}
   <p class="texto">${esc(i.descripcion)}</p>
   ${i.respuesta ? `<p class="resp"><strong>Administración:</strong> ${esc(i.respuesta)}</p>` : ''}
+  ${propia ? `<div class="acc acciones-propias"><button class="sec" data-act="edit-inc">Editar mi incidencia</button><button class="sec" data-act="del" data-t="incidencias">Eliminar</button></div>` : ''}
   ${gestor() ? `<details><summary>Gestionar</summary>
     <label>Estado<select>${Object.entries(ESTADOS).map(([k, t]) => `<option value="${k}"${k === i.estado ? ' selected' : ''}>${t}</option>`).join('')}</select></label>
     <label>Respuesta para el vecino<textarea rows="3">${esc(i.respuesta || '')}</textarea></label>
     <div class="acc">${borrar('incidencias')}<button class="pri" data-act="ok">Guardar</button></div></details>` : ''}
 </article>`;
+};
 
 async function vIncidencias(m) {
   const { data, error } = await db.from('incidencias').select('*').order('created_at', { ascending: false });
@@ -355,6 +360,15 @@ async function clic(e) {
   const c = b.closest('[data-id]'), id = c && c.dataset.id;
   if (b.dataset.v) { vista = b.dataset.v; return render(); }
   if (b.dataset.act === 'new') return nuevo(b.dataset.t);
+  if (b.dataset.act === 'edit-inc') {
+    const { data: x, error } = await db.from('incidencias').select('id,autor,tipo,titulo,descripcion').eq('id', id).single();
+    if (error || !x || x.autor !== me.id) return aviso('Solo puedes editar tus propias incidencias.');
+    return formulario('Editar mi incidencia o reclamación', [
+      { n: 'tipo', l: 'Tipo', t: 'select', v: x.tipo, o: [['incidencia', 'Incidencia'], ['reclamacion', 'Reclamación']] },
+      { n: 'titulo', l: 'Título', v: x.titulo, r: 1 },
+      { n: 'descripcion', l: 'Descripción', t: 'textarea', v: x.descripcion, r: 1 }
+    ], v => db.from('incidencias').update({ ...v, actualizada_at: ahora() }).eq('id', id).eq('autor', me.id), 'Cambios guardados.');
+  }
   if (b.dataset.act === 'ok') {
     const { error } = await db.from('incidencias').update({ estado: c.querySelector('select').value, respuesta: c.querySelector('textarea').value.trim() || null, actualizada_at: ahora() }).eq('id', id);
     return error ? aviso('No se pudo guardar el cambio.') : render();
@@ -374,6 +388,7 @@ async function clic(e) {
     const t = b.dataset.t, recuperable = t !== 'incidencias';
     if (!await confirmar(recuperable ? 'Se eliminará, pero podrás deshacerlo durante unos segundos.' : 'Esta incidencia se eliminará definitivamente.')) return;
     const { data: copia } = await db.from(t).select('*').eq('id', id).single();
+    if (t === 'incidencias' && copia && !gestor() && copia.autor !== me.id) return aviso('Solo puedes eliminar tus propias incidencias.');
     const { error } = await db.from(t).delete().eq('id', id);
     if (error) return aviso('No se pudo eliminar.');
     render();
