@@ -101,4 +101,4 @@ dialog h2{font-size:1.4rem}
 .mini{display:flex;gap:.3rem;margin-top:.4rem;justify-content:flex-end}
 .mini button{min-height:2.2rem;padding:0 .7rem;font-size:.75rem}
 #ferr:empty{display:none}
-.logo{width:1.05em;height:1.05em;vertical-align:-.14em;margin-right:.25em;flex:none}
+.logo{width:2.1em;height:1.05em;object-fit:contain;vertical-align:-.14em;margin-right:.25em;flex:none}
