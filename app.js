@@ -92,7 +92,7 @@ const MANUAL = `<div class="manual">
 <h4>2. Ver las incidencias</h4><img src="manual/02-incidencias.png" alt="Lista de incidencias" loading="lazy">
 <p>En “Incidencias” ves todos los avisos y reclamaciones. Con el desplegable “Filtrar por” eliges cuáles ver. Cada una muestra su estado (abierta, en proceso o resuelta) y la fecha de su última actualización.</p>
 <h4>3. Avisar de un problema</h4><img src="manual/03-nueva.png" alt="Formulario de nueva incidencia" loading="lazy">
-<p>Pulsa el botón naranja “Nueva incidencia”, elige si es incidencia o reclamación, ponle un título y cuéntalo. Pulsa “Guardar”.</p>
+<p>Pulsa el botón naranja “Nueva incidencia”, elige si es incidencia o reclamación, ponle un título y cuéntalo. Pulsa “Guardar”. En las que hayas creado tú verás los botones “Editar” y “Eliminar”; el estado solo lo cambia la administración.</p>
 <h4>4. El resumen</h4><img src="manual/04-resumen.png" alt="Resumen de incidencias" loading="lazy">
 <p>Pulsa “Resumen” para ver de un vistazo cuántas hay abiertas, en proceso y resueltas.</p>
 <h4>5. Reuniones</h4><img src="manual/05-reuniones.png" alt="Lista de reuniones" loading="lazy">
@@ -117,6 +117,7 @@ function abrirDialogo(titulo, html, botones) {
   $('#dlg').showModal();
 }
 const cerrar = () => $('#dlg').close();
+$('#dlg-x').onclick = cerrar;
 // Ventanas propias (los avisos del navegador pueden estar bloqueados y no se ven)
 const aviso = t => abrirDialogo('Aviso', `<p>${esc(t)}</p><button type="button" class="pri bloque" id="cerrar">Entendido</button>`, { cerrar });
 function confirmar(texto, boton = 'Sí, eliminar') {
@@ -130,10 +131,11 @@ function confirmar(texto, boton = 'Sí, eliminar') {
 let tt;
 function toast(texto, deshacer) {
   const t = $('#toast');
-  t.innerHTML = `<span>${esc(texto)}</span><button type="button" id="t-un">Deshacer</button>`;
+  t.innerHTML = `<span>${esc(texto)}</span><button type="button" id="t-un">Deshacer</button><button type="button" id="t-x" aria-label="Descartar">✕</button>`;
   t.hidden = false;
   $('#t-un').onclick = () => { t.hidden = true; clearTimeout(tt); deshacer(); };
-  clearTimeout(tt); tt = setTimeout(() => { t.hidden = true; }, 8000);
+  $('#t-x').onclick = () => { t.hidden = true; clearTimeout(tt); };
+  clearTimeout(tt); tt = setTimeout(() => { t.hidden = true; }, 5000);
 }
 function manual() {
   abrirDialogo('Manual de usuario', MANUAL + '<button type="button" class="pri bloque" id="cerrar">Entendido</button>', { cerrar });
@@ -270,6 +272,7 @@ const tarjetaInc = i => `<article class="card s-${i.estado}" data-id="${i.id}">
     <label>Estado<select>${Object.entries(ESTADOS).map(([k, t]) => `<option value="${k}"${k === i.estado ? ' selected' : ''}>${t}</option>`).join('')}</select></label>
     <label>Respuesta para el vecino<textarea rows="3">${esc(i.respuesta || '')}</textarea></label>
     <div class="acc">${borrar('incidencias')}<button class="pri" data-act="ok">Guardar</button></div></details>` : ''}
+  ${!gestor() && i.autor === me.id ? `<div class="acc">${borrar('incidencias')}<button class="sec" data-act="edinc">Editar</button></div>` : ''}
 </article>`;
 
 async function vIncidencias(m) {
@@ -365,6 +368,14 @@ async function clic(e) {
     const { data: vs } = await db.from('profiles').select('vivienda').order('vivienda');
     return formulario('Presidente de la comunidad', [{ n: 'vivienda', l: 'Vivienda del presidente', t: 'select', o: vs.filter(x => esVivienda(x.vivienda)).map(x => [x.vivienda, x.vivienda.toUpperCase()]) }],
       v => db.rpc('asignar_presidente', { vid: v.vivienda }));
+  }
+  if (b.dataset.act === 'edinc') {
+    const { data: x } = await db.from('incidencias').select('*').eq('id', id).single();
+    return formulario('Editar incidencia', [
+      { n: 'tipo', l: 'Tipo', t: 'select', o: [['incidencia', 'Incidencia'], ['reclamacion', 'Reclamación']], v: x.tipo },
+      { n: 'titulo', l: 'Título', r: 1, v: x.titulo },
+      { n: 'descripcion', l: 'Cuéntanos qué ocurre', t: 'textarea', r: 1, v: x.descripcion }],
+      v => db.from('incidencias').update(v).eq('id', id));
   }
   if (b.dataset.act === 'edmov') {
     const { data: x } = await db.from('movimientos').select('*').eq('id', id).single();

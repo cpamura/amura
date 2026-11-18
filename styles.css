@@ -101,4 +101,16 @@ dialog h2{font-size:1.4rem}
 .mini{display:flex;gap:.3rem;margin-top:.4rem;justify-content:flex-end}
 .mini button{min-height:2.2rem;padding:0 .7rem;font-size:.75rem}
 #ferr:empty{display:none}
-.logo{width:1.05em;height:1.05em;vertical-align:-.14em;margin-right:.25em;flex:none}
+.logo{height:1.7rem;width:auto;vertical-align:-.3em;margin-right:.4rem}
+header .logo{filter:brightness(0) invert(1)}
+#form-login .logo{height:2.4rem;vertical-align:-.35em}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) #form-login .logo{filter:brightness(0) invert(1)}}
+:root[data-theme="dark"] #form-login .logo{filter:brightness(0) invert(1)}
+.dlg-cab{position:sticky;top:-1.4rem;z-index:2;display:flex;justify-content:space-between;align-items:flex-start;gap:.6rem;background:var(--tarjeta);margin:-1.4rem -1.4rem .3rem;padding:1.4rem 1.4rem .6rem}
+#dlg-x{flex:none;min-width:2.6rem;min-height:2.6rem;padding:0;border-radius:50%;background:var(--linea);font-size:1.1rem;color:var(--tinta)}
+.manual h4{font-size:1.25rem;font-weight:800;color:var(--marca);background:var(--fondo);border-left:6px solid var(--acento);border-radius:0 14px 14px 0;padding:.45rem .8rem;margin:1.6rem 0 .6rem}
+.cierre{display:grid;grid-template-columns:1fr 1fr;gap:.6rem;margin-bottom:.8rem}
+.cierre div{background:var(--tarjeta);border-radius:20px;padding:.8rem 1rem;box-shadow:0 3px 12px rgba(0,0,0,.06)}
+.cierre span{display:block;font-size:.75rem;color:var(--suave)}
+.cierre strong{font-size:1.15rem}
+#toast #t-x{min-width:2.4rem;min-height:2.4rem;padding:0;background:transparent;color:var(--fondo);border:2px solid currentColor;border-radius:50%;font-size:1rem}
