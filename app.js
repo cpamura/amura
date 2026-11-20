@@ -276,7 +276,7 @@ const tarjetaInc = i => `<article class="card s-${i.estado}" data-id="${i.id}">
 </article>`;
 
 async function vIncidencias(m) {
-  const { data, error } = await db.rpc('listar_incidencias');
+  const { data, error } = await db.rpc('listar_incidencias').order('created_at', { ascending: false });
   if (error) throw error;
   const seg = `<div class="seg"><button class="${vista === 'detalle' ? 'on' : ''}" data-v="detalle">📋 Detalle</button><button class="${vista === 'resumen' ? 'on' : ''}" data-v="resumen">📊 Resumen</button></div>`;
   const hola = `<div class="hola"><strong>¡Hola! 👋</strong><span>${esc(etiquetaUsuario())}. ¿Qué quieres hacer hoy?</span></div>`;
