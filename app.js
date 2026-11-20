@@ -359,7 +359,7 @@ async function clic(e) {
   if (b.dataset.v) { vista = b.dataset.v; return render(); }
   if (b.dataset.act === 'new') return nuevo(b.dataset.t);
   if (b.dataset.act === 'ok') {
-    const { error } = await db.from('incidencias').update({ estado: c.querySelector('select').value, respuesta: c.querySelector('textarea').value.trim() || null, actualizada_at: ahora() }).eq('id', id);
+    const { error } = await db.rpc('gestionar_incidencia', { p_id: id, p_estado: c.querySelector('select').value, p_respuesta: c.querySelector('textarea').value.trim() || null });
     return error ? aviso('No se pudo guardar el cambio.') : render();
   }
   if (b.dataset.act === 'saldo') return formulario('Actualizar saldo', [{ n: 'saldo', l: 'Nuevo saldo en euros', t: 'number', r: 1 }],
