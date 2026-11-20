@@ -272,7 +272,7 @@ const tarjetaInc = i => `<article class="card s-${i.estado}" data-id="${i.id}">
     <label>Estado<select>${Object.entries(ESTADOS).map(([k, t]) => `<option value="${k}"${k === i.estado ? ' selected' : ''}>${t}</option>`).join('')}</select></label>
     <label>Respuesta para el vecino<textarea rows="3">${esc(i.respuesta || '')}</textarea></label>
     <div class="acc">${borrar('incidencias')}<button class="pri" data-act="ok">Guardar</button></div></details>` : ''}
-  ${i.es_propia ? `<div class="acc">${borrar('incidencias')}<button class="sec" data-act="edinc">Editar</button></div>` : ''}
+  ${!gestor() && i.es_propia ? `<div class="acc">${borrar('incidencias')}<button class="sec" data-act="edinc">Editar</button></div>` : ''}
 </article>`;
 
 async function vIncidencias(m) {
