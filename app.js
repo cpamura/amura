@@ -264,7 +264,7 @@ const borrar = t => `<button class="sec" data-act="del" data-t="${t}">Eliminar</
 const tarjetaInc = i => `<article class="card s-${i.estado}" data-id="${i.id}">
   <div class="fila"><span class="b ${i.estado}">${ESTADOS[i.estado]}</span><span class="b">${i.tipo === 'reclamacion' ? 'Reclamación' : 'Incidencia'}</span></div>
   <h3>${esc(i.titulo)}</h3>
-  <p class="meta">${esc(lugar(i.vivienda))}. Creada el ${fecha(i.created_at)}</p>
+  <p class="meta">${i.vivienda ? esc(lugar(i.vivienda)) + '. ' : ''}Creada el ${fecha(i.created_at)}</p>
   ${i.actualizada_at ? `<p class="meta act">🔄 Actualizada el ${fecha(i.actualizada_at)}</p>` : ''}
   <p class="texto">${esc(i.descripcion)}</p>
   ${i.respuesta ? `<p class="resp"><strong>Administración:</strong> ${esc(i.respuesta)}</p>` : ''}
@@ -272,24 +272,24 @@ const tarjetaInc = i => `<article class="card s-${i.estado}" data-id="${i.id}">
     <label>Estado<select>${Object.entries(ESTADOS).map(([k, t]) => `<option value="${k}"${k === i.estado ? ' selected' : ''}>${t}</option>`).join('')}</select></label>
     <label>Respuesta para el vecino<textarea rows="3">${esc(i.respuesta || '')}</textarea></label>
     <div class="acc">${borrar('incidencias')}<button class="pri" data-act="ok">Guardar</button></div></details>` : ''}
-  ${!gestor() && i.autor === me.id ? `<div class="acc">${borrar('incidencias')}<button class="sec" data-act="edinc">Editar</button></div>` : ''}
+  ${!gestor() && i.es_propia ? `<div class="acc">${borrar('incidencias')}<button class="sec" data-act="edinc">Editar</button></div>` : ''}
 </article>`;
 
 async function vIncidencias(m) {
-  const { data, error } = await db.from('incidencias').select('*').order('created_at', { ascending: false });
+  const { data, error } = await db.rpc('listar_incidencias').order('created_at', { ascending: false });
   if (error) throw error;
   const seg = `<div class="seg"><button class="${vista === 'detalle' ? 'on' : ''}" data-v="detalle">📋 Detalle</button><button class="${vista === 'resumen' ? 'on' : ''}" data-v="resumen">📊 Resumen</button></div>`;
   const hola = `<div class="hola"><strong>¡Hola! 👋</strong><span>${esc(etiquetaUsuario())}. ¿Qué quieres hacer hoy?</span></div>`;
   if (vista === 'resumen') {
     const n = e => data.filter(i => i.estado === e).length;
     const filas = [...data].sort((a, b) => new Date(b.actualizada_at || b.created_at) - new Date(a.actualizada_at || a.created_at))
-      .map(i => `<div class="res"><div><strong>${esc(i.titulo)}</strong><small>${i.tipo === 'reclamacion' ? 'Reclamación' : 'Incidencia'}, ${esc(lugar(i.vivienda))}</small></div>
+      .map(i => `<div class="res"><div><strong>${esc(i.titulo)}</strong><small>${i.tipo === 'reclamacion' ? 'Reclamación' : 'Incidencia'}${i.vivienda ? ', ' + esc(lugar(i.vivienda)) : ''}</small></div>
         <div class="der"><span class="b ${i.estado}">${ESTADOS[i.estado]}</span><small>${i.actualizada_at ? 'Actualizada el ' + fecha(i.actualizada_at) : 'Creada el ' + fecha(i.created_at)}</small></div></div>`).join('');
     m.innerHTML = hola + seg + `<div class="tiles">${Object.keys(ESTADOS).map(e => `<div class="tile ${e}"><strong>${n(e)}</strong><span>${PLURAL[e]}</span></div>`).join('')}</div>` +
       titulo('Todas las incidencias y reclamaciones') + (filas || '<p class="vacio">Todavía no hay incidencias.</p>');
     return;
   }
-  const l = data.filter(i => filtro === 'todas' || (filtro === 'mias' ? i.autor === me.id : i.estado === filtro));
+  const l = data.filter(i => filtro === 'todas' || (filtro === 'mias' ? i.es_propia : i.estado === filtro));
   const opciones = [['todas', 'Todas'], ['abierta', 'Abiertas'], ['en_proceso', 'En proceso'], ['resuelta', 'Resueltas'], ['mias', 'Mis incidencias']]
     .map(([k, t]) => `<option value="${k}"${filtro === k ? ' selected' : ''}>${t}</option>`).join('');
   m.innerHTML = hola + seg + `<label class="filtro">Filtrar por<select id="filtro">${opciones}</select></label>` +
@@ -370,7 +370,7 @@ async function clic(e) {
       v => db.rpc('asignar_presidente', { vid: v.vivienda }));
   }
   if (b.dataset.act === 'edinc') {
-    const { data: x } = await db.from('incidencias').select('*').eq('id', id).single();
+    const { data: x } = await db.from('incidencias').select('id,tipo,titulo,descripcion').eq('id', id).single();
     return formulario('Editar incidencia', [
       { n: 'tipo', l: 'Tipo', t: 'select', o: [['incidencia', 'Incidencia'], ['reclamacion', 'Reclamación']], v: x.tipo },
       { n: 'titulo', l: 'Título', r: 1, v: x.titulo },
@@ -384,7 +384,9 @@ async function clic(e) {
   if (b.dataset.act === 'del') {
     const t = b.dataset.t, recuperable = t !== 'incidencias';
     if (!await confirmar(recuperable ? 'Se eliminará, pero podrás deshacerlo durante unos segundos.' : 'Esta incidencia se eliminará definitivamente.')) return;
-    const { data: copia } = await db.from(t).select('*').eq('id', id).single();
+    const { data: copia } = recuperable
+      ? await db.from(t).select('*').eq('id', id).single()
+      : { data: null };
     const { error } = await db.from(t).delete().eq('id', id);
     if (error) return aviso('No se pudo eliminar.');
     render();
